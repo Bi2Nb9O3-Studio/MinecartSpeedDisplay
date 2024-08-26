@@ -1,9 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "xyz.bi2nb9o3.minecartspeeddisplay.mixin",
+  "package": "xyz.bi2nb9o3.minecartspeeddisplay.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "WorldRendererMixin"
   ],
   "client": [
   ],
