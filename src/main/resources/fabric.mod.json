@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "minecartspeeddisplay",
+  "version": "${version}",
+  "name": "MinecartSpeedDisplay",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/Bi2Nb9O3/MinecartSpeedDisplay"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/minecartspeeddisplay/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "xyz.bi2nb9o3.minecartspeeddisplay.MinecartSpeedDisplay"
+    ]
+  },
+  "mixins": [
+    "minecartspeeddisplay.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
