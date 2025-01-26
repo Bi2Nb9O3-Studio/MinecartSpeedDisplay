@@ -2,7 +2,7 @@ package xyz.bi2nb9o3.minecartspeeddisplay.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.vehicle.MinecartEntity;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
@@ -14,11 +14,11 @@ import java.util.Objects;
 
 public class SpeedDisplay {
     public final World WORLD;
-    public final MinecartEntity ENTITY;
+    public final AbstractMinecartEntity ENTITY;
     DecimalFormat df = new DecimalFormat(".00");
     private boolean valid = true;
 
-    public SpeedDisplay(World world, MinecartEntity entity) {
+    public SpeedDisplay(World world, AbstractMinecartEntity entity) {
         WORLD = world;
         ENTITY = entity;
     }
@@ -78,8 +78,24 @@ public class SpeedDisplay {
                     String.valueOf(
                         df.format(ENTITY.getVelocity().x*20))),
                 Formatting.AQUA.getColorValue());
-            drawString(matrixStack, this.ENTITY.getPos(), tickDelta, 0, String.format("Y: %s block/s ",String.valueOf(df.format(ENTITY.getVelocity().y*20))),Formatting.GOLD.getColorValue());
-            drawString(matrixStack, this.ENTITY.getPos(), tickDelta, -0.7F, String.format("Z: %s block/s ",String.valueOf(df.format(ENTITY.getVelocity().z*20))),Formatting.GREEN.getColorValue());
+            drawString(matrixStack,
+                this.ENTITY.getPos(),
+                tickDelta,
+                0,
+                String.format(
+                    "Y: %s block/s ",
+                    String.valueOf(
+                        df.format(ENTITY.getVelocity().y*20))),
+                Formatting.GOLD.getColorValue());
+            drawString(matrixStack,
+                this.ENTITY.getPos(),
+                tickDelta,
+                -0.7F,
+                String.format(
+                    "Z: %s block/s ",
+                    String.valueOf(
+                        df.format(ENTITY.getVelocity().z*20))),
+                Formatting.GREEN.getColorValue());
 
         }
     }

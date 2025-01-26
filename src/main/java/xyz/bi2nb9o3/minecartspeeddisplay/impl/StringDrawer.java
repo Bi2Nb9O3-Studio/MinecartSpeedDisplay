@@ -29,6 +29,15 @@ import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
+//#if MC < 11904
+//$$ import net.minecraft.util.math.AffineTransformation;
+//#endif
+
+//#else  // if MC >= 11500
+//$$ import com.mojang.blaze3d.platform.GlStateManager;
+//$$ import net.minecraft.client.render.entity.EntityRenderDispatcher;
+//#endif
+
 public class StringDrawer
 {
     private static final double MAX_RENDER_DISTANCE = 256.0D;

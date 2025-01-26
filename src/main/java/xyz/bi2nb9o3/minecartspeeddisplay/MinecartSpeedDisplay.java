@@ -8,7 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.vehicle.MinecartEntity;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -40,12 +40,12 @@ public class MinecartSpeedDisplay implements ModInitializer{
             }
         });
         ClientEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (entity instanceof MinecartEntity minecartEntity) {
+            if (entity instanceof AbstractMinecartEntity minecartEntity) {
                 DisplayManager.getInstance().displayMap.add(new SpeedDisplay(world, minecartEntity));
             }
         });
         ClientEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
-            if (entity instanceof MinecartEntity minecartEntity) {
+            if (entity instanceof AbstractMinecartEntity minecartEntity) {
                 DisplayManager.getInstance().deleteEntity(world, minecartEntity);
             }
         });

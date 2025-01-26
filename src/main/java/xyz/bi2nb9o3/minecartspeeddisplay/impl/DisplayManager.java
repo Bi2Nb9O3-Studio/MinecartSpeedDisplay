@@ -4,7 +4,7 @@ package xyz.bi2nb9o3.minecartspeeddisplay.impl;
 import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.vehicle.MinecartEntity;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
@@ -53,7 +53,7 @@ public class DisplayManager {
         removeList.forEach(this.displayMap::remove);
     }
 
-    public void deleteEntity(World world, MinecartEntity entity){
+    public void deleteEntity(World world, AbstractMinecartEntity entity){
 //        displayMap.remove(new SpeedDisplay(world, entity));
         for(int i=0;i<displayMap.size();i++){
             if (displayMap.get(i).ENTITY==entity && displayMap.get(i).ENTITY.equals(entity)){
