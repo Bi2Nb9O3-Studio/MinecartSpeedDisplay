@@ -57,8 +57,6 @@ public class SpeedDisplay {
         return Objects.equals(world, this.WORLD) && (chunk instanceof WorldChunk && !((WorldChunk) chunk).isEmpty());
     }
 
-
-
     void render(MatrixStack matrixStack, float tickDelta)
     {
         if (!this.isDisabled())
@@ -69,6 +67,12 @@ public class SpeedDisplay {
                 this.invalid();
                 return;
             }
+
+            // Don't render on minecart if player is inside it
+            if (client.player != null && client.player.getVehicle() == this.ENTITY) {
+                return;
+            }
+
             Vec3d pos = this.ENTITY.getEntityPos().add(0, 0.5, 0);
             drawString(matrixStack,
                 pos,

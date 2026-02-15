@@ -21,17 +21,14 @@
 package xyz.bi2nb9o3.minecartspeeddisplay.impl;
 
 import com.mojang.blaze3d.opengl.GlStateManager;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.text.StringVisitable;
 import net.minecraft.client.font.TextRenderer.TextLayerType;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.StringVisitable;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
-import org.joml.Vector3d;
 
 public class StringDrawer {
     private static final double MAX_RENDER_DISTANCE = (double)256.0F;

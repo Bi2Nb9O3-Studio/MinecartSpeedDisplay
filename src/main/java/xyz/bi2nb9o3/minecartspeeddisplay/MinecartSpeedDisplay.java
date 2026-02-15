@@ -4,6 +4,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.option.KeyBinding;
@@ -14,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 import xyz.bi2nb9o3.minecartspeeddisplay.impl.DisplayManager;
+import xyz.bi2nb9o3.minecartspeeddisplay.impl.HudSpeedRenderer;
 import xyz.bi2nb9o3.minecartspeeddisplay.impl.SpeedDisplay;
 
 public class MinecartSpeedDisplay implements ModInitializer{
@@ -54,5 +57,8 @@ public class MinecartSpeedDisplay implements ModInitializer{
                 DisplayManager.getInstance().deleteEntity(world, minecartEntity);
             }
         });
+
+        // Register HUD render callback
+        HudElementRegistry.attachElementBefore(VanillaHudElements.CROSSHAIR, Identifier.of(MOD_ID, "minecart_speed_display"),HudSpeedRenderer::onHudRender);
     }
 }
