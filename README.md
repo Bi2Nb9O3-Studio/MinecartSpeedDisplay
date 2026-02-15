@@ -12,10 +12,10 @@
 ## Requirements
 
 ----------------
-|Item | Version |
-|-----|---------|
-|Minecarft| 1.21.1|
-|Fabric | 0.16+ |
+|Item | Version                      |
+|-----|------------------------------|
+|Minecarft| 1.21.1 1.21.4 1.21.11        |
+|Fabric | 0.16+                        |
 |Fabric API | Recommand for latest version |
 
 ----------------

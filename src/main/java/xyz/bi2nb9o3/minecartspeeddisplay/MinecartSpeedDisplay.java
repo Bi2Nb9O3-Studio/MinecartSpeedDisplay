@@ -9,6 +9,7 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -21,12 +22,16 @@ public class MinecartSpeedDisplay implements ModInitializer{
 
     public static final String MOD_ID = "minecartspeeddisplay";
     public static String MOD_VERSION = "unknown";
-    public static String MOD_NAME = "unknown";
+    public static String MOD_NAME = "MinecartSpeedDisplay";
+    public static KeyBinding.Category CATEGORY = new KeyBinding.Category(
+        Identifier.of(MOD_ID, "custom_category")
+    );
     public static final KeyBinding TOGGLE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
         "key.minecartspeeddisplay.toggle",
         InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
         GLFW.GLFW_KEY_P, // The keycode of the key
-        "category.minecartspeeddisplay.text" // The translation key of the keybinding's category.
+        CATEGORY
+//        "category.minecartspeeddisplay.text" // The translation key of the keybinding's category.
     ));
 
     @Override

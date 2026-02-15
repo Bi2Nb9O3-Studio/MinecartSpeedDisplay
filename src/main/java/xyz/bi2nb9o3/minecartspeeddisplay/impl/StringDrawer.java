@@ -20,201 +20,67 @@
 
 package xyz.bi2nb9o3.minecartspeeddisplay.impl;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.opengl.GlStateManager;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.text.StringVisitable;
+import net.minecraft.client.font.TextRenderer.TextLayerType;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
-//#if MC < 11904
-//$$ import net.minecraft.util.math.AffineTransformation;
-//#endif
+import org.joml.Vector3d;
 
-//#else  // if MC >= 11500
-//$$ import com.mojang.blaze3d.platform.GlStateManager;
-//$$ import net.minecraft.client.render.entity.EntityRenderDispatcher;
-//#endif
-
-public class StringDrawer
-{
-    private static final double MAX_RENDER_DISTANCE = 256.0D;
+public class StringDrawer {
+    private static final double MAX_RENDER_DISTANCE = (double)256.0F;
     private static final float FONT_SIZE = 0.025F;
 
-    //#if MC >= 11500
-    private static VertexConsumerProvider.Immediate getVertexConsumer()
-    {
-        //#if MC >= 12100
+    private static VertexConsumerProvider.Immediate getVertexConsumer() {
         return MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-        //#else
-        //$$ return VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-        //#endif
     }
-    //#endif
 
-    /**
-     * Stolen from {@link DebugRenderer#drawString(MatrixStack, VertexConsumerProvider, String, double, double, double, int, float, boolean, float, boolean)}
-     */
-    //#if 11600 <= MC && MC < 11700
-    //$$ @SuppressWarnings("deprecation")
-    //#endif
-    public static void drawString(MatrixStack matrixStack, Vec3d pos, float tickDelta, float line, String[] texts, int[] colors)
-    {
+    public static void drawString(MatrixStack matrixStack, Vec3d pos, float tickDelta, float line, String[] texts, int[] colors) {
         MinecraftClient client = MinecraftClient.getInstance();
         Camera camera = client.gameRenderer.getCamera();
-        if (camera.isReady() && client.getEntityRenderDispatcher().gameOptions != null && client.player != null)
-        {
-            double x = (double)pos.getX() + 0.5D;
-            double y = (double)pos.getY() + 0.5D;
-            double z = (double)pos.getZ() + 0.5D;
-            if (client.player.squaredDistanceTo(x, y, z) > MAX_RENDER_DISTANCE * MAX_RENDER_DISTANCE)
-            {
+        if (camera.isReady() && client.getEntityRenderDispatcher().gameOptions != null && client.player != null) {
+            double x = (double)pos.getX() + (double)0.5F;
+            double y = (double)pos.getY() + (double)0.5F;
+            double z = (double)pos.getZ() + (double)0.5F;
+            if (client.player.squaredDistanceTo(x, y, z) > (double)65536.0F) {
                 return;
             }
-            double camX = camera.getPos().x;
-            double camY = camera.getPos().y;
-            double camZ = camera.getPos().z;
 
-            // ========================== Prepare Matrix start ==========================
-
-            //#if MC >= 11700
+            double camX = camera.getCameraPos().x;
+            double camY = camera.getCameraPos().y;
+            double camZ = camera.getCameraPos().z;
             matrixStack.push();
             matrixStack.translate((float)(x - camX), (float)(y - camY), (float)(z - camZ));
-
-            //#if MC >= 11800
-
-            matrixStack.multiplyPositionMatrix(
-                //#else
-                //$$ matrixStack.method_34425(
-                //#endif
-
-                //#if MC >= 11904
-                new Matrix4f().rotation(
-                    //#else
-                    //$$ new Matrix4f(
-                    //#endif
-                    camera.getRotation()
-                )
-            );
-            matrixStack.scale(
-                //#if MC >= 12100
-                FONT_SIZE,
-                //#else
-                //$$ -FONT_SIZE,
-                //#endif
-                -FONT_SIZE,
-                1
-            );
-            //#if MC < 11904
-            //$$ RenderSystem.enableTexture();
-            //#endif
-            RenderSystem.disableDepthTest();  // visibleThroughObjects
-            //#if MC < 11904
-            //$$ RenderSystem.depthMask(true);
-            //$$ RenderSystem.applyModelViewMatrix();
-            //#endif
-
-            //#elseif MC >= 11500
-            //$$ // if MC >= 11800
-            //$$
-            //$$ RenderSystem.pushMatrix();
-            //$$ RenderSystem.translatef((float)(x - camX), (float)(y - camY), (float)(z - camZ));
-            //$$ RenderSystem.normal3f(0.0F, 1.0F, 0.0F);
-            //$$ RenderSystem.multMatrix(new Matrix4f(camera.getRotation()));
-            //$$ RenderSystem.scalef(-FONT_SIZE, -FONT_SIZE, 1);
-            //$$ RenderSystem.enableTexture();
-            //$$ RenderSystem.disableDepthTest();  // visibleThroughObjects
-            //$$ RenderSystem.depthMask(true);
-            //$$ RenderSystem.enableAlphaTest();
-            //$$
-            //#else
-            //$$
-            //$$ GlStateManager.pushMatrix();
-            //$$ GlStateManager.translatef((float)(x - camX), (float)(y - camY), (float)(z - camZ));
-            //$$ GlStateManager.normal3f(0.0F, 1.0F, 0.0F);
-            //$$ GlStateManager.scalef(FONT_SIZE, -FONT_SIZE, FONT_SIZE);
-            //$$ EntityRenderDispatcher entityRenderDispatcher = client.getEntityRenderManager();
-            //$$ GlStateManager.rotatef(-entityRenderDispatcher.cameraYaw, 0.0F, 1.0F, 0.0F);
-            //$$ GlStateManager.rotatef(-entityRenderDispatcher.cameraPitch, 1.0F, 0.0F, 0.0F);
-            //$$ GlStateManager.enableTexture();
-            //$$ GlStateManager.disableDepthTest();  // visibleThroughObjects
-            //$$ GlStateManager.depthMask(true);
-            //$$ GlStateManager.scalef(-1.0F, 1.0F, 1.0F);
-            //$$
-            //#endif  // elseif MC >= 11500
-
-            // ========================== Prepare Matrix end ==========================
-
+            matrixStack.multiplyPositionMatrix((new Matrix4f()).rotation(camera.getRotation()));
+            matrixStack.scale(0.025F, -0.025F, 1.0F);
+            GlStateManager._disableDepthTest();
             float totalWidth = 0.0F;
-            for (String text: texts)
-            {
-                totalWidth += client.textRenderer.getWidth(text);
+
+            for(String text : texts) {
+                totalWidth += (float)client.textRenderer.getWidth(text);
             }
 
             float writtenWidth = 0.0F;
-            for (int i = 0; i < texts.length; i++)
-            {
+
+            for(int i = 0; i < texts.length; ++i) {
                 float renderX = -totalWidth * 0.5F + writtenWidth;
-                float renderY = client.textRenderer.getWrappedLinesHeight(texts[i], Integer.MAX_VALUE) * (-0.5F + 1.25F * line);
-
-                //#if MC >= 11500
-                //#if MC >= 11904
+                float renderY = (float)client.textRenderer.getWrappedLinesHeight(StringVisitable.plain(texts[i]), Integer.MAX_VALUE) * (-0.5F + 1.25F * line);
                 Matrix4f positionMatrix = matrixStack.peek().getPositionMatrix();
-                //#else
-                //$$ Matrix4f positionMatrix = AffineTransformation.identity().getMatrix();
-                //#endif
-
-                //#endif  // if MC >= 11500
-
-                //#if MC >= 11500
                 VertexConsumerProvider.Immediate immediate = getVertexConsumer();
-                client.textRenderer.draw(
-                    texts[i], renderX, renderY, colors[i],
-                    false, positionMatrix, immediate,
-                    //#if MC >= 11904
-                    TextRenderer.TextLayerType.SEE_THROUGH,
-                    //#else
-                    //$$ true,
-                    //#endif
-                    0, 0xF000F0
-                );
+                client.textRenderer.draw(texts[i], renderX, renderY, colors[i] | -16777216, false, positionMatrix, immediate, TextLayerType.NORMAL, 0, 15728880);
                 immediate.draw();
-                //#else
-                //$$ client.textRenderer.draw(texts[i], renderX, renderY, colors[i]);
-                //#endif
-
-                writtenWidth += client.textRenderer.getWidth(texts[i]);
+                writtenWidth += (float)client.textRenderer.getWidth(texts[i]);
             }
 
-            // ========================== Restore Matrix start ==========================
-
-            //#if MC >= 11700
-
-            //#if MC < 11904
-            //$$ RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            //#endif
-
-            RenderSystem.enableDepthTest();
+            GlStateManager._enableDepthTest();
             matrixStack.pop();
-
-            //#elseif MC >= 11500
-            //$$ // if MC >= 11800
-            //$$
-            //$$ RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            //$$ RenderSystem.enableDepthTest();
-            //$$ RenderSystem.popMatrix();
-            //$$
-            //#else
-            //$$
-            //$$ GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            //$$ GlStateManager.enableDepthTest();
-            //$$ GlStateManager.popMatrix();
-            //$$
-            //#endif  // elseif MC >= 11500
-
-            // ========================== Restore Matrix end ==========================
         }
+
     }
 }

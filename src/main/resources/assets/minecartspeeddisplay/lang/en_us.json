@@ -1,6 +1,6 @@
 {
   "key.minecartspeeddisplay.toggle": "Toggle Minecart Speed Display",
-  "category.minecartspeeddisplay.text": "Minecart Speed Display",
+  "key.category.minecartspeeddisplay.custom_category": "Minecart Speed Display",
   "text.minecartspeeddisplay.toggle.on": "Minecart Speed Display - §2 On",
   "text.minecartspeeddisplay.toggle.off": "Minecart Speed Display - §4 Off"
 }

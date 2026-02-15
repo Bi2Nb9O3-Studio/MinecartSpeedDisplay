@@ -69,8 +69,9 @@ public class SpeedDisplay {
                 this.invalid();
                 return;
             }
+            Vec3d pos = this.ENTITY.getEntityPos().add(0, 0.5, 0);
             drawString(matrixStack,
-                this.ENTITY.getPos(),
+                pos,
                 tickDelta,
                 0.7F,
                 String.format(
@@ -79,7 +80,7 @@ public class SpeedDisplay {
                         df.format(ENTITY.getVelocity().x*20))),
                 Formatting.AQUA.getColorValue());
             drawString(matrixStack,
-                this.ENTITY.getPos(),
+                pos,
                 tickDelta,
                 0,
                 String.format(
@@ -88,7 +89,7 @@ public class SpeedDisplay {
                         df.format(ENTITY.getVelocity().y*20))),
                 Formatting.GOLD.getColorValue());
             drawString(matrixStack,
-                this.ENTITY.getPos(),
+                pos,
                 tickDelta,
                 -0.7F,
                 String.format(

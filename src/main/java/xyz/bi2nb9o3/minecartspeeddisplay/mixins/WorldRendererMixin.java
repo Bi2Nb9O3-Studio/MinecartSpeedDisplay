@@ -16,6 +16,9 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Pistorder.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Modified By Bi2Nb9O3
+ * Modifications: to Yarn mapping
  */
 
 package xyz.bi2nb9o3.minecartspeeddisplay.mixins;
@@ -28,18 +31,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.bi2nb9o3.minecartspeeddisplay.impl.DisplayManager;
-//#endif
+
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin
 {
     @Inject(
-        method = "method_62212",  // lambda method in renderLateDebug
+        // lambda method in addLateDebugPass
+        method = "method_75413",
         at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/render/debug/DebugRenderer;renderLate(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;DDD)V"
+            value = "FIELD",
+            target = "Lnet/minecraft/client/render/WorldRenderer;gizmos:Lnet/minecraft/client/render/WorldRenderer$Gizmos;",
+            ordinal = 0
         )
     )
-    private void renderPistorder(
+    private void render(
         CallbackInfo ci,
         @Local MatrixStack matrices
     )
