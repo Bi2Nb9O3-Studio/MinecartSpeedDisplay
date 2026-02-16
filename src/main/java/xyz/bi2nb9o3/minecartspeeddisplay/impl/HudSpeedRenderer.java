@@ -6,7 +6,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.util.Formatting;
-import xyz.bi2nb9o3.minecartspeeddisplay.MinecartSpeedDisplay;
 
 import java.text.DecimalFormat;
 

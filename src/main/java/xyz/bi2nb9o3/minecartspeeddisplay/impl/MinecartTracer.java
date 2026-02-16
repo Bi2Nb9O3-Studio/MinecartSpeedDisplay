@@ -9,6 +9,7 @@ import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class MinecartTracer {
     private final List<TrackedMinecart> trackedMinecarts = new ArrayList<>();
     private final DecimalFormat df = new DecimalFormat(".00");
     private TrackPoint lookingAtPoint=null;
+    private static final int maxTrailPoints = 2000;
 
     public static MinecartTracer getInstance() {
         return INSTANCE;
@@ -89,11 +91,15 @@ public class MinecartTracer {
 
         // Check if looking at any trail point
         for (TrackedMinecart tracked : trackedMinecarts) {
-            TrackPoint point = tracked.getLookingAtPoint();
-            lookingAtPoint = point;
-            if (point != null) {
-                renderPointInfo(drawContext, point);
-                break;
+            ImmutableTriple<TrackPoint,Double,Double> result = tracked.getLookingAtPoint();
+            if (result != null) {
+                if (result.left!=null && result.middle!=null && result.right!=null){
+                    TrackPoint point = (TrackPoint) result.left;
+                    lookingAtPoint = point;
+                    renderPointInfo(drawContext, point);
+//                    drawContext.fill(result.middle.intValue(),result.right.intValue(),result.middle.intValue()+100,result.right.intValue()+100,0xFF00FF00);
+                    break;
+                }
             }
         }
     }
@@ -158,8 +164,8 @@ public class MinecartTracer {
             trail.add(new TrackPoint(pos, speed, (int) currentTick));
 
             // Limit trail length to avoid memory issues
-            if (trail.size() > 1000) {
-                trail.subList(0, trail.size() - 1000).clear();
+            if (trail.size() > maxTrailPoints) {
+                trail.subList(0, trail.size() - maxTrailPoints).clear();
             }
         }
 
@@ -199,7 +205,7 @@ public class MinecartTracer {
 //                // Draw the point at the actual world position
 //                StringDrawer.drawString(matrixStack, pointPos, 0, 0, new String[]{"·"}, new int[]{color});
 //            }
-            StringDrawer.drawString(matrixStack, start, 0, 0, new String[]{"·"}, new int[]{color});
+            StringDrawer.drawString(matrixStack, end, 0, 0, new String[]{"·"}, new int[]{color});
 //            StringDrawer.drawString(matrixStack, pointPos, 0, 0, new String[]{"·"}, new int[]{color});
         }
 
@@ -248,65 +254,49 @@ public class MinecartTracer {
 //
 //            return closestPoint;
 //        }
-        public TrackPoint getLookingAtPoint() {
-            MinecraftClient client = MinecraftClient.getInstance();
-            Vec3d origin = client.player.getCameraPosVec(1.0f);
-            Vec3d dir = client.player.getRotationVec(1.0f);
-            double maxDistance = 5.0;
-            double minDistance = 0.5;
-            
-            if (trail.isEmpty()) return null;
-        
-            double dx = dir.x, dy = dir.y, dz = dir.z;
-            double dirLenSq = dx * dx + dy * dy + dz * dz;
-        
-            // 方向向量为零的特殊情况：退化为点，直接比较到起点的距离
-            if (dirLenSq == 0.0) {
-                TrackPoint closest = null;
-                double minDistSq = Double.MAX_VALUE;
-                for (TrackPoint p : trail) {
-                    double vx = p.pos.x - origin.x, vy = p.pos.y - origin.y, vz = p.pos.z - origin.z;
-                    double distSq = vx * vx + vy * vy + vz * vz;
-                    if (distSq < minDistSq) {
-                        minDistSq = distSq;
-                        closest = p;
-                    }
-                }
-                if (closest != null)
-                    if(closest.pos.distanceTo(client.player.getCameraPosVec(1.0f)) > maxDistance || closest.pos.distanceTo(client.player.getCameraPosVec(1.0f)) < minDistance)
-                        return null;
-                 return closest;
-            }
-        
+        public ImmutableTriple<TrackPoint,Double,Double> getLookingAtPoint() {
+            if (trail == null || trail.isEmpty()) return null;
+            double screenWidth =  MinecraftClient.getInstance().getWindow().getWidth();
+            double screenHeight =  MinecraftClient.getInstance().getWindow().getHeight();
+            double maxDistance =5.0;
+
+            double screenCenterX = screenWidth / 2.0;  // 需要传入屏幕尺寸或从其他地方获取
+            double screenCenterY = screenHeight / 2.0;
+
             TrackPoint closest = null;
             double minDistSq = Double.MAX_VALUE;
-        
-            for (TrackPoint p : trail) {
-                double vx = p.pos.x - origin.x, vy = p.pos.y - origin.y, vz = p.pos.z - origin.z;
-                double dot = vx * dx + vy * dy + vz * dz;
-                double t = dot / dirLenSq;
-        
-                double distSq;
-                if (t < 0) {
-                    // 投影在射线反向延长线上，距离取到起点的距离
-//                    distSq = vx * vx + vy * vy + vz * vz;
-                    continue;
-                } else {
-                    // 垂足坐标
-                    double fx = origin.x + t * dx, fy = origin.y + t * dy, fz = origin.z + t * dz;
-                    double px = p.pos.x - fx, py = p.pos.y - fy, pz = p.pos.z - fz;
-                    distSq = px * px + py * py + pz * pz;
+            double recordCloestX = 0.0;
+            double recordCLoestY = 0.0;
+
+            for (TrackPoint tp : trail) {
+                Vec3d ndc = MinecraftClient.getInstance().gameRenderer.project(tp.pos);
+
+                // 检查点是否在视锥内（即 NDC 坐标在 [-1,1] 范围内）
+                if (ndc.x < -1.0 || ndc.x > 1.0 || ndc.y < -1.0 || ndc.y > 1.0 || ndc.z < -1.0 || ndc.z > 1.0) {
+                    continue; // 跳过屏幕外的点
                 }
-        
+
+                // 将 NDC 坐标转换为屏幕像素坐标
+                double screenX = (ndc.x + 1.0) / 2.0 * screenWidth;
+                double screenY = (1.0 - ndc.y) / 2.0 * screenHeight; // 因为 NDC y 向上，屏幕 y 向下
+
+                double dx = screenX - screenCenterX;
+                double dy = screenY - screenCenterY;
+                double distSq = dx * dx + dy * dy;
+
                 if (distSq < minDistSq) {
                     minDistSq = distSq;
-                    closest = p;
+                    closest = tp;
+                    recordCloestX=screenX;
+                    recordCLoestY=screenY;
                 }
             }
-            if (closest != null)
-                if(closest.pos.distanceTo(client.player.getCameraPosVec(1.0f)) > maxDistance || closest.pos.distanceTo(client.player.getCameraPosVec(1.0f)) < minDistance)
+
+
+            if (closest!=null)
+                if(closest.pos.distanceTo(MinecraftClient.getInstance().gameRenderer.getCamera().getCameraPos())>maxDistance)
                     return null;
-            return closest;
+            return ImmutableTriple.of(closest,recordCloestX,recordCLoestY);
         }
 
 //        private double distanceToLine(Vec3d start, Vec3d end, Vec3d point) {
