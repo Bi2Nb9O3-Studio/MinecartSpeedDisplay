@@ -2,5 +2,12 @@
   "key.minecartspeeddisplay.toggle": "Toggle Minecart Speed Display",
   "key.category.minecartspeeddisplay.custom_category": "Minecart Speed Display",
   "text.minecartspeeddisplay.toggle.on": "Minecart Speed Display - §2 On",
-  "text.minecartspeeddisplay.toggle.off": "Minecart Speed Display - §4 Off"
+  "text.minecartspeeddisplay.toggle.off": "Minecart Speed Display - §4 Off",
+  "text.minecartspeeddisplay.trace.start": "Minecart Speed Display - §2 Trace Start",
+  "text.minecartspeeddisplay.trace.miss": "Minecart Speed Display - §2 No Minecart In Sight",
+  "text.minecartspeeddisplay.trace.stop": "Minecart Speed Display - §4 Trace Stop",
+  "text.minecartspeeddisplay.trace.clear": "Minecart Speed Display - §4 Track Points Cleared",
+  "key.minecartspeeddisplay.clear_trails": "Clear Track Points",
+  "key.minecartspeeddisplay.stop_tracking": "Stop Tracking",
+  "key.minecartspeeddisplay.start_tracking": "Start Tracking"
 }

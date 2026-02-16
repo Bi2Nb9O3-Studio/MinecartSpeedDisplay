@@ -117,21 +117,21 @@ public class MinecartSpeedDisplay implements ModInitializer{
             AbstractMinecartEntity minecart = getLookingAtMinecart(client);
             if (minecart != null) {
                 MinecartTracer.getInstance().startTracking(minecart);
-                client.inGameHud.setOverlayMessage(Text.literal("Started tracking minecart trail"), false);
+                client.inGameHud.setOverlayMessage(Text.translatable("text.minecartspeeddisplay.trace.start"), false);
             } else {
-                client.inGameHud.setOverlayMessage(Text.literal("No minecart in sight"), false);
+                client.inGameHud.setOverlayMessage(Text.translatable("text.minecartspeeddisplay.trace.miss"), false);
             }
         }
     }
 
     private static void handleStopTracking(MinecraftClient client) {
         MinecartTracer.getInstance().stopTracking();
-        client.inGameHud.setOverlayMessage(Text.literal("Stopped tracking minecart trails"), false);
+        client.inGameHud.setOverlayMessage(Text.translatable("text.minecartspeeddisplay.trace.stop"), false);
     }
 
     private static void handleClearTrails(MinecraftClient client) {
         MinecartTracer.getInstance().clearAllTrails();
-        client.inGameHud.setOverlayMessage(Text.literal("Cleared all minecart trails"), false);
+        client.inGameHud.setOverlayMessage(Text.translatable("text.minecartspeeddisplay.trace.clear"), false);
     }
 
     private static AbstractMinecartEntity getLookingAtMinecart(MinecraftClient client) {

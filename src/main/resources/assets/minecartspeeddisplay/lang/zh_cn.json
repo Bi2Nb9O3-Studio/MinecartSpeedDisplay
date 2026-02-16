@@ -2,5 +2,12 @@
   "key.minecartspeeddisplay.toggle": "开关矿车速度显示",
   "key.category.minecartspeeddisplay.custom_category": "矿车速度显示",
   "text.minecartspeeddisplay.toggle.on": "矿车速度显示 - §2 开启",
-  "text.minecartspeeddisplay.toggle.off": "矿车速度显示 - §4 关闭"
+  "text.minecartspeeddisplay.toggle.off": "矿车速度显示 - §4 关闭",
+  "text.minecartspeeddisplay.trace.start": "矿车速度显示 - §2 开始记录",
+  "text.minecartspeeddisplay.trace.miss": "矿车速度显示 - §4 未检测到矿车",
+  "text.minecartspeeddisplay.trace.stop": "矿车速度显示 - §4 停止记录",
+  "text.minecartspeeddisplay.trace.clear": "矿车速度显示 - §4 清除轨迹点",
+  "key.minecartspeeddisplay.clear_trails": "清除轨迹点",
+  "key.minecartspeeddisplay.stop_tracking": "停止记录",
+  "key.minecartspeeddisplay.start_tracking": "开始记录"
 }
